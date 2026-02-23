@@ -6,7 +6,7 @@
 #    By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/19 04:39:18 by pedrohe3          #+#    #+#              #
-#    Updated: 2026/02/19 05:14:06 by pedrohe3         ###   ########.fr        #
+#    Updated: 2026/02/23 18:50:16 by pedrohe3         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +26,10 @@ $(NAME): $(libft) $(OBJECTS)
 	echo $(OBJECTS)
 
 $(libft):
-	make -s bonus -C libft
+	make bonus -C libft
 
 %.o : %.c
-	cc $(CFLAGS) $(CFILES) -c -o $@ $^ 
+	cc $(CFLAGS) -c -o $@ $^ 
 
 clean:
 	make -s clean -C libft

@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.h                                        :+:      :+:    :+:   */
+/*   push_swap_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 05:17:30 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/02/23 19:22:01 by pedrohe3         ###   ########.fr       */
+/*   Created: 2026/02/19 19:49:45 by pedrohe3          #+#    #+#             */
+/*   Updated: 2026/02/23 19:22:30 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PUSH_SWAP_H
-# define PUSH_SWAP_H
+#include "push_swap.h"
 
-# include "libft/libft.h"
+void	ft_push(t_list **stack, t_list *node)
+{
+	node->next = *stack;
+	*stack = node;
+}
 
-int	ft_push_swap(t_list stack);
-void	ft_push(t_list **stack, t_list *node);
-void	ft_pop(t_list *stack);
-void	ft_get_top(t_list *stack);
-void	ft_get_stack(t_list *stack);
+void	ft_pop(t_list *stack)
+{
+	t_list	*prev;
 
-#endif
+	if (!stack)
+		return ;
+	prev = stack;
+	stack = stack->next;
+	prev->content = NULL;
+	free(prev);
+}

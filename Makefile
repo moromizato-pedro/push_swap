@@ -6,7 +6,7 @@
 #    By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/19 04:39:18 by pedrohe3          #+#    #+#              #
-#    Updated: 2026/02/23 18:50:16 by pedrohe3         ###   ########.fr        #
+#    Updated: 2026/02/25 16:29:17 by pedrohe3         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ OBJECTS = $(CFILES:.c=.o)
 HFILES = push_swap.h
 
 NAME = push_swap
-libft = /libft/libft.a
+libft = ./libft/libft.a
 
 all: $(NAME) 
 
@@ -27,6 +27,9 @@ $(NAME): $(libft) $(OBJECTS)
 
 $(libft):
 	make bonus -C libft
+
+test:
+	cc *.c $(libft)
 
 %.o : %.c
 	cc $(CFLAGS) -c -o $@ $^ 

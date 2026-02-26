@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 05:17:30 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/02/24 20:02:31 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/02/26 00:58:50 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,18 @@
 # define PUSH_SWAP_H
 
 # include "libft/libft.h"
+# include <limits.h>
 
 // Delete those libraries
 # include <stdio.h>
 
 void	ft_push_swap(t_list **stack);
-void	ft_push_from(t_list **from, t_list **to);
+void	ft_swap(t_list **stack);
 void	ft_push(t_list **stack, void *content);
+void	ft_push_from(t_list **from, t_list **to);
 void	ft_pop(t_list **stack);
+void	ft_rotate(t_list **stack);
+void	ft_rrotate(t_list **stack);
 void	ft_get_top(t_list *stack);
 void	ft_get_stack(t_list *stack);
 

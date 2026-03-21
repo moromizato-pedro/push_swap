@@ -5,142 +5,93 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 19:49:45 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/12 00:08:28 by pedrohe3         ###   ########.fr       */
+/*   Created: 2026/03/16 22:01:35 by pedrohe3          #+#    #+#             */
+/*   Updated: 2026/03/19 16:32:52 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-t_stack	*ft_stcknew(void *content)
+void	ft_swap_node(t_stack *node1, t_stack *node2)
 {
-	t_stack *stack;
+	void	*temp;
 
-	stack = malloc(sizeof(t_stack));
-	if (!stack)
-		return (NULL);
-	stack->content = content;
-	stack->next = NULL;
-	stack->idx = 0;
-	stack->cost = 0;
-	stack->target = -1;
-	return (stack);
-}
-
-void	ft_push(t_stack **stack, void *content)
-{
-	t_stack	*node;
-	int	push;
-
-	push = 1;
-	if (!(*stack))
-		return (write(1, "Erro push\n", 10), (void)0);
-		//return ;
-	node = ft_stcknew(content);
-	ft_update_idx(stack, push);
-	node->next = *stack;
-	*stack = node;
-}
-
-void	ft_pop(t_stack **stack)
-{
-	t_stack	*prev;
-	int	pop;
-
-	pop = 0;
-	if (!(*stack))
-		return (write(1, "Erro pop\n", 9), (void)0);
-		//return ;
-	prev = *stack;
-	*stack = (*stack)->next;
-	prev->content = NULL;
-	prev->next = NULL;
-	ft_update_idx(stack, pop);
-	if (prev)
-		free(prev);
-	prev = NULL;
-}
-
-void	ft_swap(t_stack **stack)
-{
-	t_stack	temp;
-
-	if (!(*stack))
-		return (write(1, "Erro swap\n", 10), (void)0);
-		//return ;
-	temp = **stack;
-	//printf("idx: %d | data: %ld -> idx: %d | data: %ld\n", (*stack)->idx, (long)(*stack)->content, (*stack)->next->idx, (long)(*stack)->next->content);
-	(*stack)->content = (*stack)->next->content;
-	(*stack)->next->content = temp.content;
-	//printf("idx: %d | data: %ld\n", (*stack)->idx, (long)(*stack)->content);
+	temp = node1->data;
+	node1->data = node2->data;
+	node2->data = temp;
+	temp = &node1->target;
+	node1->target = node2->target;
+	node2->target = *(int *)temp;
 }
 
 void	ft_push_from(t_stack **from, t_stack **to)
 {
-	if (!(*from) || !(*to))
-		return (write(1, "Erro push_from\n", 15), (void)0);
-		//return ;
-	ft_push(to, (*from)->content);
+	if (!(*from))
+		return (printf("Error push_from\n"), (void)0);
+	ft_push(to, (*from)->data);
 	ft_pop(from);
 }
 
 void	ft_rotate(t_stack **stack)
 {
-	void	*temp;
 	t_stack	*ptr;
 
-	if (!(*stack))
-		return (write(1, "Erro rotate\n", 12), (void)0);
-		//return ;
 	ptr = *stack;
-	temp = ptr->content;
-	while (ptr->next->next)
+	while (ptr->next)
 	{
-		ptr->content = ptr->next->content;
+		ft_swap_node(ptr, ptr->next);
 		ptr = ptr->next;
 	}
-	ptr->content = temp;
 }
 
 void	ft_rrotate(t_stack **stack)
 {
-	void	*curr;
-	void	*next;
 	t_stack	*ptr;
-
-	if (!(*stack))
-		return (write(1, "Erro rrotate\n", 13), (void)0);
-	ptr = *stack;
-	curr = ptr->content;
-	while (ptr->next->next)
-	{
-		next = ptr->next->content;
-		ptr->next->content = curr;
-		curr = next;
-		ptr = ptr->next;
-	}
-	(*stack)->content = curr;
-}
-
-void	ft_update_idx(t_stack **stack, int push)
-{
-	t_stack	*ptr;
+	t_stack	*first;
+	t_stack	temp;
+	t_stack	copy;
 
 	ptr = *stack;
-	while (ptr)
+	first = *stack;
+	temp = *ptr;
+	while (ptr->next)
 	{
-		if (push)
-			ptr->idx++;
-		else
-			ptr->idx--;
+		copy = *ptr->next;
+		ptr->next->data = temp.data;
+		ptr->next->target = temp.target;
 		ptr = ptr->next;
+		temp = copy;
 	}
+	first->data = temp.data;
+	first->target = temp.target;
 }
 
-void	_get_stacks(t_stack *a, t_stack *b)
+int	ft_parse_operation(char *op, t_stack **a, t_stack **b)
 {
-	printf("A:\n");
-	ft_get_stack(a);
-	printf("B:\n\n");
-	ft_get_stack(b);
+	if (!op)
+		return (write(1, "Erro\n", 5), 0);
+	if (ft_strncmp(op, "sa", 2) == 0)
+		return (write(1, "sa\n", 3), ft_swap_node(*a, (*a)->next), 1);
+	else if (ft_strncmp(op, "sb", 2) == 0)
+		return (write(1, "sb\n", 3), ft_swap_node(*b, (*b)->next), 1);
+	else if (ft_strncmp(op, "ss", 2) == 0)
+		return (write(1, "ss\n", 3), ft_swap_node(*a, (*a)->next), ft_swap_node(*b, (*b)->next), 1);
+	else if (ft_strncmp(op, "pa", 2) == 0)
+		return (write(1, "pa\n", 3), ft_push_from(b, a), 1);
+	else if (ft_strncmp(op, "pb", 2) == 0)
+		return (write(1, "pb\n", 3), ft_push_from(a, b), 1);
+	else if (ft_strncmp(op, "rra", 3) == 0)
+		return (write(1, "rra\n", 4), ft_rrotate(a), 1);
+	else if (ft_strncmp(op, "rrb", 3) == 0)
+		return (write(1, "rrb\n", 4), ft_rrotate(b), 1);
+	else if (ft_strncmp(op, "rrr", 3) == 0)
+		return (write(1, "rrr\n", 4), ft_rrotate(a), ft_rrotate(b), 1);
+	else if (ft_strncmp(op, "ra", 2) == 0)
+		return (write(1, "ra\n", 3), ft_rotate(a), 1);
+	else if (ft_strncmp(op, "rb", 2) == 0)
+		return (write(1, "rb\n", 3), ft_rotate(b), 1);
+	else if (ft_strncmp(op, "rr", 2) == 0)
+		return (write(1, "rr\n", 3), ft_rotate(a), ft_rotate(b), 1);
+	return (write(1, "Erro\n", 5), 0);
 }
+

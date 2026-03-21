@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 17:40:18 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/21 03:49:08 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/21 03:35:55 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ int	ft_get_min_bigger(t_stack *stack, void *ref)
 {
 	void	*min_bigger;
 	int	min_bigger_idx;
+	t_stack	*start;
 	
 	min_bigger = NULL;
 	min_bigger_idx = 0;
+	start = stack;
 	while (stack)
 	{
 		if (stack->data > ref && (!min_bigger || stack->data < min_bigger))
@@ -28,6 +30,20 @@ int	ft_get_min_bigger(t_stack *stack, void *ref)
 			min_bigger_idx = stack->idx;
 		}
 		stack = stack->next;
+	}
+	if (ft_has_duplicate(start, min_bigger))
+	{
+		printf("			Duplicate found\n");
+		printf("			min_bigger: %d -> ", min_bigger_idx);
+		min_bigger_idx = ft_get_min_duplicate(start, min_bigger);
+		printf("%d\n", min_bigger_idx);
+	}
+	else if (!min_bigger)
+	{
+		printf("			Bigger found\n");
+		printf("			min_bigger: %d -> ", min_bigger_idx);
+		min_bigger_idx = ft_get_bigger(start);
+		printf("%d\n", min_bigger_idx);
 	}
 	return (min_bigger_idx);
 }
@@ -82,12 +98,12 @@ int	ft_sort_cheapest(t_stack **a, t_stack **b, t_stack cheapest)
 	_ft_get_stack(*a);
 	printf("B:\n");
 	_ft_get_stack(*b);
-	ops += ft_reorder_a(a, cost_a);
-	printf("A:\n");
+	//ops += ft_reorder_a(a, cost_a);
+	/*printf("A:\n");
 	_ft_get_stack(*a);
 	printf("B:\n");
 	_ft_get_stack(*b);
-	return (ops);
+	*/return (ops);
 }
 
 int	ft_move_2_top(t_stack **a, t_stack **b, int cost_a, int cost_b)
@@ -120,6 +136,18 @@ int	ft_move_2_top(t_stack **a, t_stack **b, int cost_a, int cost_b)
 
 int	ft_reorder_a(t_stack **a, int cost_a)
 {
+	t_stack	min_node;
+	int	ops;
+
+	min_node = ft_get_min_node(*a);
+	ops = 0;
+	printf("min_idx: %d -> ", min_node.idx);
+	if (ft_has_duplicate(*a, min_node.data))
+		min_node.idx = ft_get_min_duplicate(*a, min_node.data);
+	printf("%d\n", min_node.idx);
+	cost_a = ft_cost_2_top(min_node.idx, ft_get_len(*a));
+/*	
+	//	Reordering for always ordered stack
 	int	ops;
 
 	ops = 0;
@@ -131,6 +159,7 @@ int	ft_reorder_a(t_stack **a, int cost_a)
 			cost_a--;
 	cost_a = -cost_a;
 	printf("%d\n", cost_a);
+*/
 	while (cost_a)
 	{
 		if (cost_a > 0)
@@ -162,6 +191,7 @@ int	ft_turk_algorithm(t_stack **a, t_stack **b)
 		cheapest = ft_find_cheapest_node(a, b);
 		ops += ft_sort_cheapest(a, b, cheapest);
 	}
+	ops += ft_reorder_a(a, 0);
 	return (ops);
 }
 

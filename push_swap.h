@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 22:01:03 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/21 00:34:11 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/21 02:57:14 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,12 @@ int	ft_turk_algorithm(t_stack **a, t_stack **b);
 
 //	Turk Algorithm Utils
 int	ft_cost_2_top(int idx, int len);
-int	ft_get_min(t_stack *a);
+t_stack	ft_get_min_node(t_stack *a);
 int	ft_abs(int n);
 void	ft_update_costs(int *cost_a, int *cost_b);
+int	ft_has_duplicate(t_stack *stack, void *data);
+int	ft_get_min_duplicate(t_stack *stack, void *min_bigger);
+int	ft_get_bigger(t_stack *stack);
 
 //	Setup
 void	_ft_get_stack(t_stack *stack);

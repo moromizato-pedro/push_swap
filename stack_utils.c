@@ -1,60 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap_stack.c                                  :+:      :+:    :+:   */
+/*   stack_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 17:10:45 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/23 02:43:08 by pedrohe3         ###   ########.fr       */
+/*   Created: 2026/03/23 16:17:28 by pedrohe3          #+#    #+#             */
+/*   Updated: 2026/03/23 21:46:31 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-t_stack	*ft_stcknew(void *data)
-{
-	t_stack *stack;
-
-	stack = malloc(sizeof(t_stack));
-	if (!stack)
-		return (NULL);
-	stack->data = data;
-	stack->next = NULL;
-	stack->idx = 0;
-	stack->target = -1;
-	stack->cost = INT_MAX;
-	return (stack);
-}
-
-void	ft_push(t_stack **stack, void *data)
-{
-	t_stack	*new;
-
-	if (!stack)
-		return ;
-	new = ft_stcknew(data);
-	if (!(*stack))
-		*stack = new;
-	else
-	{
-		new->next = *stack;
-		ft_reset_idxs(&new);
-		*stack = new;
-	}
-}
-
-void	ft_pop(t_stack **stack)
-{
-	t_stack *temp;
-
-	temp = (*stack)->next;
-	if (!stack || !(*stack))
-		return ;
-	free(*stack);
-	*stack = temp;
-	ft_reset_idxs(stack);
-}
 
 int	ft_is_sorted(t_stack *stack)
 {
@@ -74,7 +30,7 @@ int	ft_is_sorted(t_stack *stack)
 void	ft_reset_idxs(t_stack **stack)
 {
 	t_stack	*ptr;
-	int	idx;
+	int		idx;
 
 	if (!stack || !(*stack))
 		return ;
@@ -82,9 +38,7 @@ void	ft_reset_idxs(t_stack **stack)
 	idx = 0;
 	while (ptr)
 	{
-		//printf("[%d] %ld\n", ptr->idx, (long)ptr->data);
 		ptr->idx = idx++;
-		//printf("	[%d] %ld\n", ptr->idx, (long)ptr->data);
 		ptr = ptr->next;
 	}
 }
@@ -100,4 +54,21 @@ int	ft_get_len(t_stack *stack)
 		stack = stack->next;
 	}
 	return (len);
+}
+
+//	Returns only the amount of duplicates of data
+int	ft_has_duplicate(t_stack *stack, void *data)
+{
+	int	count;
+
+	count = -1;
+	while (stack)
+	{
+		if (stack->data == data)
+			count++;
+		stack = stack->next;
+	}
+	if (count < 0)
+		return (0);
+	return (count);
 }

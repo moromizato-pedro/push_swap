@@ -6,13 +6,13 @@
 #    By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/19 04:39:18 by pedrohe3          #+#    #+#              #
-#    Updated: 2026/03/21 00:37:26 by pedrohe3         ###   ########.fr        #
+#    Updated: 2026/03/23 16:15:35 by pedrohe3         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CFLAGS = -Wall -Werror -Wextra
 
-CFILES = push_swap.c push_swap_utils.c push_swap_stack.c push_swap_setup.c turk_algorithm.c turk_algorithm_utils.c
+CFILES = stack.c stack_utils.c setup.c push_swap.c push_swap_utils.c turk_algorithm.c turk_algorithm_utils.c
 OBJECTS = $(CFILES:.c=.o)
 
 HFILES = push_swap.h

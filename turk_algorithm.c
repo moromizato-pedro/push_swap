@@ -6,66 +6,46 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 17:40:18 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/23 02:55:17 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/23 22:02:53 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-//	Gets the index of the number which the reference should be placed before.
-int	ft_get_min_bigger(t_stack *stack, void *ref)
+int	ft_turk_algorithm(t_stack **a, t_stack **b)
 {
-	void	*min_bigger;
-	int	min_bigger_idx;
-	t_stack	*start;
-	
-	min_bigger = stack->data;
-	min_bigger_idx = -1;
-	start = stack;
-	while (stack)
+	t_stack	cheapest;
+	int		ops;
+	int		cost_a;
+	int		cost_b;
+
+	ops = 0;
+	while (*b)
 	{
-		if ((long)stack->data > (long)ref && (min_bigger_idx < 0 || (long)stack->data < (long)min_bigger))
-		{
-			min_bigger = stack->data;
-			min_bigger_idx = stack->idx;
-		}
-		stack = stack->next;
+		cheapest = ft_find_cheapest_node(a, b);
+		cost_a = ft_cost_2_top(cheapest.target, ft_get_len(*a));
+		cost_b = ft_cost_2_top(cheapest.idx, ft_get_len(*b));
+		ops += ft_move_2_top(a, b, cost_a, cost_b);
+		ops += ft_parse_operation("pa", a, b);
 	}
-	if (min_bigger_idx < 0)
-	{
-		//printf("			Bigger found\n");
-		//printf("			min_bigger: %d -> ", min_bigger_idx);
-		min_bigger_idx = ft_get_bigger(start);
-		//printf("%d\n", min_bigger_idx);
-	}
-	else if (ft_has_duplicate(start, min_bigger))
-	{
-		//printf("			Duplicate found for %ld\n", (long)min_bigger);
-		//printf("			min_bigger: %d -> ", min_bigger_idx);
-		min_bigger_idx = ft_get_min_duplicate(start, min_bigger);
-		//printf("%d\n", min_bigger_idx);
-	}
-	return (min_bigger_idx);
+	ops += ft_reorder_a(a, 0);
+	return (ops);
 }
 
+//	Returns a copy of the node with lowest cost to place both node and target
+//	at top.
 t_stack	ft_find_cheapest_node(t_stack **a, t_stack **b)
 {
 	t_stack	*ptr;
 	t_stack	cheapest;
-	int	min_cost;
-	int	cost;
+	int		min_cost;
+	int		cost;
 
 	ptr = *b;
 	min_cost = -1;
-	/*printf("A:\n");
-	_ft_get_stack(*a);
-	printf("B:\n");
-	_ft_get_stack(*b);
-	printf("---\n");*/
 	while (ptr)
 	{
 		ptr->target = ft_get_min_bigger(*a, ptr->data);
-		//printf("B(%d) -> A(%d) | CostA: %d CostB: %d\n", ptr->idx, ptr->target, ft_cost_2_top(ptr->target, ft_get_len(*a)), ft_cost_2_top(ptr->idx, ft_get_len(*b)));
 		cost = ft_abs(ft_cost_2_top(ptr->target, ft_get_len(*a)));
 		cost += ft_abs(ft_cost_2_top(ptr->idx, ft_get_len(*b)));
 		if (min_cost < 0 || cost < min_cost)
@@ -78,29 +58,33 @@ t_stack	ft_find_cheapest_node(t_stack **a, t_stack **b)
 	return (cheapest);
 }
 
-int	ft_sort_cheapest(t_stack **a, t_stack **b, t_stack cheapest)
+//	Gets the index of the node which the reference should be placed before.
+//	If ref is bigger than all stack, put it at the beggining.
+int	ft_get_min_bigger(t_stack *stack, void *ref)
 {
-	int	cost_a;
-	int	cost_b;
-	int	ops;
+	t_stack	*min_bigger;
+	t_stack	*min;
+	t_stack	*start;
 
-	cost_a = ft_cost_2_top(cheapest.target, ft_get_len(*a));
-	cost_b = ft_cost_2_top(cheapest.idx, ft_get_len(*b));
-	ops = 0;
-	//printf("Cheapest: [%d] -> [%d]\n", cheapest.idx, cheapest.target);
-	ops += ft_move_2_top(a, b, cost_a, cost_b);
-	//printf("A:\n");
-	//_ft_get_stack(*a);
-	//printf("B:\n");
-	//_ft_get_stack(*b);
-	ops += ft_parse_operation("pa", a, b);
-	//printf("A:\n");
-	//_ft_get_stack(*a);
-	//printf("B:\n");
-	//_ft_get_stack(*b);
-	return (ops);
+	min = NULL;
+	min_bigger = NULL;
+	start = stack;
+	while (stack)
+	{
+		if ((long)ref < (long)stack->data && (!min_bigger
+				|| (long)min_bigger->data > (long)stack->data))
+			min_bigger = stack;
+		else if (!min || (long)min->data > (long)stack->data)
+			min = stack;
+		stack = stack->next;
+	}
+	if (!min_bigger)
+		return (ft_get_idx(start, min->data));
+	return (min_bigger->idx);
 }
 
+//	If the cost is negative moves the stack downwards circularly, otherwise
+//	moves it upwards, and if has no cost, don't move it.
 int	ft_move_2_top(t_stack **a, t_stack **b, int cost_a, int cost_b)
 {
 	int	ops;
@@ -123,7 +107,6 @@ int	ft_move_2_top(t_stack **a, t_stack **b, int cost_a, int cost_b)
 			if (cost_b > 0)
 				ops += ft_parse_operation("rb", NULL, b);
 		}
-		//printf("		cost_a: %d | cost_b: %d\n", cost_a, cost_b);
 		ft_update_costs(&cost_a, &cost_b);
 	}
 	return (ops);
@@ -131,30 +114,12 @@ int	ft_move_2_top(t_stack **a, t_stack **b, int cost_a, int cost_b)
 
 int	ft_reorder_a(t_stack **a, int cost_a)
 {
-	t_stack	min_node;
+	int	min_data_idx;
 	int	ops;
 
-	min_node = ft_get_min_node(*a);
+	min_data_idx = ft_get_min_data_idx(*a);
 	ops = 0;
-	//printf("(%ld)min_idx: %d -> ", (long)min_node.data, min_node.idx);
-	if (ft_has_duplicate(*a, min_node.data))
-		min_node.idx = ft_get_min_duplicate(*a, min_node.data);
-	//printf("%d\n", min_node.idx);
-	cost_a = ft_cost_2_top(min_node.idx, ft_get_len(*a));
-/*	
-	//	Reordering for always ordered stack
-	int	ops;
-
-	ops = 0;
-	printf("		cost_a: %d -> ", cost_a);
-	if (cost_a < 0)
-		cost_a--;
-	else if (cost_a == 0)
-		if ((*a)->data > (*a)->next->data)
-			cost_a--;
-	cost_a = -cost_a;
-	printf("%d\n", cost_a);
-*/
+	cost_a = ft_cost_2_top(min_data_idx, ft_get_len(*a));
 	while (cost_a)
 	{
 		if (cost_a > 0)
@@ -170,23 +135,3 @@ int	ft_reorder_a(t_stack **a, int cost_a)
 	}
 	return (ops);
 }
-
-int	ft_turk_algorithm(t_stack **a, t_stack **b)
-{
-	t_stack cheapest;
-	int	ops;
-
-	ops = 0;
-	while (*b)
-	{
-		//printf("A:\n");
-		//_ft_get_stack(*a);
-		//printf("B:\n");
-		//_ft_get_stack(*b);
-		cheapest = ft_find_cheapest_node(a, b);
-		ops += ft_sort_cheapest(a, b, cheapest);
-	}
-	ops += ft_reorder_a(a, 0);
-	return (ops);
-}
-

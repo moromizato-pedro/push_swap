@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 17:10:45 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/21 01:55:51 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/23 02:43:08 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_is_sorted(t_stack *stack)
 	prev = stack->data;
 	while (stack)
 	{
-		if (stack->data < prev)
+		if ((long long)stack->data < (long long)prev)
 			return (0);
 		prev = stack->data;
 		stack = stack->next;

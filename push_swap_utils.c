@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 22:01:35 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/19 16:32:52 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/22 23:19:36 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_swap_node(t_stack *node1, t_stack *node2)
 void	ft_push_from(t_stack **from, t_stack **to)
 {
 	if (!(*from))
-		return (printf("Error push_from\n"), (void)0);
+		return ;
 	ft_push(to, (*from)->data);
 	ft_pop(from);
 }

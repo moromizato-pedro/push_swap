@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 22:01:03 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/21 02:57:14 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/23 01:52:42 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,17 @@ t_stack	ft_get_min_node(t_stack *a);
 int	ft_abs(int n);
 void	ft_update_costs(int *cost_a, int *cost_b);
 int	ft_has_duplicate(t_stack *stack, void *data);
-int	ft_get_min_duplicate(t_stack *stack, void *min_bigger);
+int	ft_get_min_duplicate(t_stack *stack, void *ref);
+int	ft_get_max_duplicate(t_stack *stack, void *ref);
 int	ft_get_bigger(t_stack *stack);
 
 //	Setup
 void	_ft_get_stack(t_stack *stack);
-t_stack	*ft_create_stack(char **av);
+t_stack	*ft_get_params(t_stack *stack);
+t_stack	*ft_create_stack(int n, char **av);
 t_stack	*_ft_fill_stack(char *len_s);
+int	ft_validate_params(int n, char **av);
+long long	ft_atoi_push(char *str);
+void	ft_check_char(const char *str, int *is_nbr, int *is_sign, long long *res);
 
 #endif

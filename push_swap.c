@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 22:01:12 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/23 21:50:51 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/30 22:50:10 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,12 @@ int	ft_push_swap(t_stack **a, t_stack **b)
 	ops = 0;
 	if (!a || !b)
 		return (ops);
-	ops += ft_isolate_3(a, b);
-	ops += ft_order_3(a);
-	ops += ft_turk_algorithm(a, b);
+	if (!ft_is_sorted(*a))
+	{
+		ops += ft_isolate_3(a, b);
+		ops += ft_order_3(a);
+		ops += ft_turk_algorithm(a, b);
+	}
 	return (ops);
 }
 
@@ -64,31 +67,33 @@ int	ft_isolate_3(t_stack **a, t_stack **b)
 	return (ops);
 }
 
-//	Bubble sort the 'a' stack and return the number of operations used. 
-//	Stops if gets sorted before the bubble sort finishes to save moves.
+//	Hardcoded for 2 nodes. For 3 nodes, it puts the lowest in the middle 
+//	(idx == 0 || 2) which guarantees that the list will be sorted by executing
+//	only one operation.
+//	If bigger is in the end, just swap the first elements
+//	If smallest at the end, the list is circularly ordered, just need a rotation
 int	ft_order_3(t_stack **a)
 {
 	int	len;
-	int	len_cpy;
 	int	operations;
 
 	len = ft_get_len(*a);
 	operations = 0;
-	if (len < 2)
-		return (operations);
-	while (len-- > 0)
+	if (len == 2)
+		operations += ft_parse_operation("sa", a, NULL);
+	else if (ft_get_min_data_idx(*a) == 0)
+		operations += ft_parse_operation("rra", a, NULL);
+	else if (ft_get_min_data_idx(*a) == 2)
+		operations += ft_parse_operation("ra", a, NULL);
+	else if (ft_get_min_data_idx(*a) == 1)
 	{
-		len_cpy = ft_get_len(*a);
-		while (len_cpy-- > 0)
-		{
-			if ((long)(*a)->data > (long)(*a)->next->data && !ft_is_sorted(*a))
-				operations += ft_parse_operation("sa", a, NULL);
-			if (!ft_is_sorted(*a))
-				operations += ft_parse_operation("ra", a, NULL);
-		}
-		if (!ft_is_sorted(*a))
+		if ((long)(*a)->data < (long)(*a)->next->next->data)
+			operations += ft_parse_operation("sa", a, NULL);
+		else if ((long)(*a)->data > (long)(*a)->next->next->data)
 			operations += ft_parse_operation("ra", a, NULL);
 	}
+	if (!ft_is_sorted(*a))
+		operations += ft_order_3(a);
 	return (operations);
 }
 

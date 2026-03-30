@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 22:01:03 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/23 22:00:18 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/30 23:39:26 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 //			Stack
 typedef struct s_stack
 {
-	void			*data;
-	struct s_stack	*next;
-	int				idx;
-	int				target;
+	void			*data;	// Content of the node
+	struct s_stack	*next;	// Pointer to next node
+	int				idx;	// The node's index
+	int				target;	// The target index at stack 'a'
 }					t_stack;
 t_stack		*ft_stcknew(void *data);
 void		ft_push(t_stack **stack, void *data);

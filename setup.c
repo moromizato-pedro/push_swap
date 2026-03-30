@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 17:08:26 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/23 21:27:56 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/30 23:36:35 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,23 @@ t_stack	*ft_create_stack(int n, char **av)
 	if (n == 1)
 	{
 		arr = ft_split(*arr, ' ');
+		n = 0;
 		while (arr[n])
 			n++;
 	}
 	if (!ft_validate_params(n, arr))
-		return (stack);
+		return (NULL);
 	while (n-- > 0)
-	{
-		ft_push(&rev_stack, (void *)(long)ft_atoi(*arr));
-		arr++;
-	}
+		ft_push(&rev_stack, (void *)(long)ft_atoi(*(arr++)));
 	while (rev_stack)
 		ft_push_from(&rev_stack, &stack);
 	return (stack);
 }
 
+//	Checks if the string is empty
+//	If not, verify if every char is a digit
+//	Ignores only if the first char is a - or + sign followed by a digit
+//	Then check if the number resulted from the string is within int limits
 int	ft_validate_params(int n, char **av)
 {
 	long long	nbr;
@@ -53,17 +55,16 @@ int	ft_validate_params(int n, char **av)
 	while (n-- > 0)
 	{
 		j = 0;
-		while (av[i][j])
-		{
-			if (av[i][j] < '0' || av[i][j] > '9')
-				if (j == 0 && (av[i][j] != '-' && av[i][j] != '+'))
-					return (0);
+		if (ft_strlen(av[i]) == 0)
+			return (0);
+		if (ft_strlen(av[i]) >= 2 && (av[i][j] == '-' || av[i][j] == '+'))
 			j++;
-		}
-		nbr = ft_atoi_push(av[i]);
+		while (av[i][j])
+			if (!ft_isdigit(av[i][j++]))
+				return (0);
+		nbr = ft_atoi_push(av[i++]);
 		if (nbr > (long long)INT_MAX || nbr < (long long)INT_MIN)
 			return (0);
-		i++;
 	}
 	return (1);
 }
@@ -122,11 +123,11 @@ void	_ft_get_stack(t_stack *stack)
 	while (stack)
 	{
 		if (stack->next)
-			printf("	S[%d] %ld	-> %ld\n", stack->idx, /
-				(long)stack->data, (long)stack->next->data);
+			printf("	S[%d] %ld	-> %ld\n", /
+			stack->idx, (long)stack->data, (long)stack->next->data);
 		else
-			printf("	S[%d] %ld	-> %p\n", stack->idx, /
-				(long)stack->data, stack->next);
+			printf("	S[%d] %ld	-> %p\n", /
+			stack->idx, (long)stack->data, stack->next);
 		stack = stack->next;
 	}
 	printf("\n");

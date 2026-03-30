@@ -6,7 +6,7 @@
 /*   By: pedrohe3 <pedrohe3@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/20 23:39:10 by pedrohe3          #+#    #+#             */
-/*   Updated: 2026/03/23 21:03:22 by pedrohe3         ###   ########.fr       */
+/*   Updated: 2026/03/30 22:05:57 by pedrohe3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_get_idx(t_stack *stack, void *ref)
 {
 	int	idx;
 
-	if (!stack || !ref)
+	if (!stack)
 		return (-1);
 	idx = -1;
 	while (stack)
